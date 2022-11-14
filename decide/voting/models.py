@@ -18,7 +18,7 @@ class BinaryQuestion(models.Model):
 class BinaryQuestionOption(models.Model):
     question = models.ForeignKey(BinaryQuestion, related_name='options', on_delete=models.CASCADE)
     number = models.PositiveIntegerField(blank=True, null=True)
-    option = models.BooleanField(choices=[(1, ('De acuerdo')), (0, ('En desacuerdo'))])
+    option = models.BooleanField(choices=[(1, 'De acuerdo'), (0, 'En desacuerdo')])
     
     def save(self):
         if not self.number:
@@ -41,33 +41,6 @@ class BinaryVoting(models.Model):
     
     tally = JSONField(blank=True, null=True)
     postproc = JSONField(blank=True, null=True)
-    
-    uniqueType = (('BV', 'BinaryVoting'),)
-    type = models.CharField(max_length=2, choices= uniqueType,default='BV')
-
-    def toJson(self):
-        json = {'id': self.id, 
-                'name': self.name, 
-                'desc': self.desc, 
-                'start_date': str(self.start_date),
-                'end_date': str(self.end_date),
-                'pub_key': {'p': str(self.pub_key.p), 
-                            'g': str(self.pub_key.g), 
-                            'y': str(self.pub_key.y)}, 
-                'auths': [{'name': self.auths.all()[0].name, 
-                            'url': self.auths.all()[0].url, 
-                            'me': self.auths.all()[0].me}], 
-                'tally': self.tally, 
-                'postproc': self.postproc,
-                'type':self.type}
-        question = {'desc': self.question.desc}
-        options = []
-        for o in self.question.options.all():
-            options.append({'number': o.number,'option':o.option})
-        question['options'] = options
-        json['question'] = question
-
-        return json
     
     def create_pubkey(self):
         if self.pub_key or not self.auths.count():
