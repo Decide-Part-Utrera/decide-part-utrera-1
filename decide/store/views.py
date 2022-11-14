@@ -7,7 +7,7 @@ from rest_framework.response import Response
 from rest_framework import generics
 
 from census.models import Census
-from voting.models import Voting, BinaryVoting
+from voting.models import Voting, BinaryVoting, MultipleVoting
 
 from .models import Vote
 from .serializers import VoteSerializer
@@ -45,6 +45,8 @@ class StoreView(generics.ListAPIView):
             voting = get_object_or_404(Voting,id=vid)
         elif type == 'BV':
             voting = get_object_or_404(BinaryVoting,pk=vid)
+        elif type == 'MV':
+            voting = get_object_or_404(MultipleVoting,pk=vid)
 
         start_date = voting.start_date
         end_date = voting.end_date
@@ -72,16 +74,38 @@ class StoreView(generics.ListAPIView):
                 perms = Census.objects.get(voting_id=vid,voter_id=voter_id,type='V')
             except:
                 return Response({}, status=status.HTTP_401_UNAUTHORIZED) 
+        elif type == 'MV':
+            try:
+                perms = Census.objects.get(voting_id=vid,voter_id=voter_id,type='MV')
+            except:
+                return Response({}, status=status.HTTP_401_UNAUTHORIZED)
 
-        a = vote.get("a")
-        b = vote.get("b")
+         # save the votes in BD
+        if type == 'MV':
+            if Vote.objects.filter(voting_id=vid, voter_id=uid, type=voting.type).exists():
+                votes = Vote.objects.filter(voting_id=vid, voter_id=uid, type=voting.type).all()
+                for vo in votes:
+                    vo.delete()
+            for vo in vote:
+                a = vo.get("a")
+                b = vo.get("b")
 
-        defs = { "a": a, "b": b }
-        v, _ = Vote.objects.get_or_create(voting_id=vid, voter_id=uid,
-                                          defaults=defs, type=voting.type)
-        v.a = a
-        v.b = b
+                v = Vote(voting_id=vid, voter_id=uid, type=voting.type)
+                v.a = a
+                v.b = b
 
-        v.save()
+                v.save()
+
+        else:
+            a = vote.get("a")
+            b = vote.get("b")
+
+            defs = { "a": a, "b": b }
+            v, _ = Vote.objects.get_or_create(voting_id=vid, voter_id=uid,
+                                            defaults=defs, type=voting.type)
+            v.a = a
+            v.b = b
+
+            v.save()
 
         return  Response({})

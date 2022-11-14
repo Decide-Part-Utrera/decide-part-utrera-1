@@ -7,7 +7,7 @@ from django.http import Http404
 from base import mods
 
 from django.shortcuts import get_object_or_404
-from voting.models import BinaryVoting, Voting
+from voting.models import Voting, BinaryVoting, MultipleVoting
 
 
 # TODO: check permissions and census
@@ -44,6 +44,23 @@ class BinaryBoothView(TemplateView):
             voting = get_object_or_404(BinaryVoting, pk=voting_id)
             context['voting'] = json.dumps(BinaryVoting.toJson(voting))
             
+        except:
+            raise Http404
+
+        context['KEYBITS'] = settings.KEYBITS
+
+        return context
+    
+class MultipleBoothView(TemplateView):
+    template_name = 'booth/boothMultipleVoting.html'
+
+    def get_context_data(self, voting_id, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        try:
+            voting = get_object_or_404(MultipleVoting,pk=voting_id)
+
+            context['voting'] = json.dumps(MultipleVoting.toJson(voting))
         except:
             raise Http404
 
