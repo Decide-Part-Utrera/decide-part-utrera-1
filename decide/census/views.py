@@ -17,7 +17,7 @@ from .models import Census
 class CensusCreate(generics.ListCreateAPIView):
     permission_classes = (UserIsStaff,)
 
-    def create(self, request, *args, **kwargs):
+    def create(self, request, type, *args, **kwargs):
         voting_id = request.data.get('voting_id')
         voters = request.data.get('voters')
         type = request.data.get('type')
@@ -31,7 +31,7 @@ class CensusCreate(generics.ListCreateAPIView):
             return Response('Error try to create census', status=ST_409)
         return Response('Census created', status=ST_201)
 
-    def list(self, request, *args, **kwargs):
+    def list(self, request, type, *args, **kwargs): 
         voting_id = request.GET.get('voting_id')
         voters = Census.objects.filter(voting_id=voting_id, type=type).values_list('voter_id', flat=True)
         return Response({'voters': voters})

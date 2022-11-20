@@ -68,7 +68,7 @@ class BinaryVoting(models.Model):
         json['question'] = question
 
         return json
-    
+
     def create_pubkey(self):
         if self.pub_key or not self.auths.count():
             return
@@ -144,7 +144,8 @@ class BinaryVoting(models.Model):
 
     def __str__(self):
         return self.name
-    
+
+
 class Question(models.Model):
     desc = models.TextField()
 
