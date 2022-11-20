@@ -193,6 +193,7 @@
                         voter: this.user.id,
                         token: this.token,
                         type: this.voting.type
+
                     }
                     this.postData("{% url "gateway" "store" "/" %}", data)
                         .then(data => {
