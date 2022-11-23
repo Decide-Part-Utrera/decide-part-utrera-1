@@ -29,8 +29,9 @@ class BoothView(TemplateView):
         context['KEYBITS'] = settings.KEYBITS
 
         return context
+        
 
-class BinaryBoothView(TemplateView): #....
+class BinaryBoothView(TemplateView): 
     template_name = 'booth/booth.html'
     
     def get_context_data(self, voting_id, **kwargs):
