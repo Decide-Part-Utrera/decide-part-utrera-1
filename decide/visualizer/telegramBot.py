@@ -20,10 +20,12 @@ from local_settings import BASEURL as LOCALURL
 #load_dotenv() #load token for bot
 
 #auth and front-end for '@VotitosBot'
-UPDATER = Updater(os.environ['5764831268:AAF_bP12SXJzEzQPGKDHvIsJRKgV4vlD6U0'],
-                use_context=True)
+BOT_TOKEN='5645355174:AAELmkmkzO2nflcbjh_scjyH6FnApSeMjqg'
 
-BOT=Bot(token=os.environ['5764831268:AAF_bP12SXJzEzQPGKDHvIsJRKgV4vlD6U0'])
+UPDATER = Updater(BOT_TOKEN, use_context=True)
+
+
+BOT=Bot(token='5645355174:AAELmkmkzO2nflcbjh_scjyH6FnApSeMjqg')
 
 
 #configures and activate '@VotitosBot' to receive any messages from users
