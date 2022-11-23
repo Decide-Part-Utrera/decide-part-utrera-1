@@ -1,6 +1,6 @@
 from django.urls import path
 from .views import *
-
+#hola
 app_name = 'booth'
 urlpatterns = [
     path('<int:voting_id>/', BoothView.as_view()),
