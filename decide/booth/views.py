@@ -1,9 +1,13 @@
 import json
+from django.http.response import HttpResponse
 from django.views.generic import TemplateView
 from django.conf import settings
 from django.http import Http404
 
 from base import mods
+
+from django.shortcuts import get_object_or_404
+from voting.models import BinaryVoting, Voting
 
 
 # TODO: check permissions and census
