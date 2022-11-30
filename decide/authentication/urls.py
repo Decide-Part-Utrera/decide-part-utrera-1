@@ -5,7 +5,7 @@ from .views import *
 
 
 from django.urls import include, path
-from django.contrib.auth.views import logout
+
 from rest_framework.authtoken.views import obtain_auth_token
 
 

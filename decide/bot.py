@@ -44,30 +44,6 @@ def resolver(message):
    except Exception: 
         bot.reply_to(message, 'Error llamando a la API') 
 
-'''
-@bot.message_handler(commands=["resultados"])
-def show_results(update, context, chat_identifier, vot_type):
-    votings=get_voting_objects(vot_type)
-    finished_votings=votings.exclude(start_date__isnull=True).exclude(end_date__isnull=True)
-    type=vot_type.split("_")[1]
-    if finished_votings is not None:
-        keyboard_buttons=[]
-        for v in finished_votings:
-            keyboard_buttons.append(InlineKeyboardButton(text=str(v.name), callback_data=str(v.id)+"_"+type))
-        keyboard=InlineKeyboardMarkup(build_keyboard_menu(keyboard_buttons,2))
-        context.bot.send_message(chat_id=chat_identifier, text= "Aquí tienes la lista de votaciones finalizadas. Elige por favor:", reply_markup=keyboard)
-    else:
-        context.bot.send_message(chat_id=chat_identifier, text= "Vaya...no hay ninguna votación de este tipo que haya finalizado.\nInténtalo de nuevo en otro momemnto")
-    
-#handler for '/results' command  
-def results_query_handler(update, context):
-    
-    query=update.callback_query
-    query.answer("¡A la orden!")
-    response_array=query.data.split("_")
-    results_graph(response_array[0], response_array[1], query.message.chat_id, context)
-
-'''
 
 
 '''
@@ -111,7 +87,7 @@ def resolver(message):
         bot.reply_to(message, 'Error llamando a la API') 
 
 '''
-'''
+
 def parse_fecha(fecha):
     partes = fecha.split('-')
     fecha_parseada = partes[2][:2] + ' de ' + meses[partes[1]] + ' del ' + partes[0]
@@ -131,7 +107,7 @@ def detalle(message):
    try: 
         texts = message.text.split(' ') 
         vid = texts[1] 
-        url = 'http://localhost:8050/visualizer/details/' + vid 
+        url = 'http://127.0.0.1:8000/visualizer/details/' + vid 
         response = requests.get(url) 
         n = 0
         for atributos in response.json():
@@ -160,7 +136,6 @@ def detalle(message):
    except Exception: 
         bot.reply_to(message, 'Error llamando a la API') 
 
-'''
 '''        
 @bot.message_handler(func=lambda msg: msg.text is not None and '/login' in msg.text) 
  
