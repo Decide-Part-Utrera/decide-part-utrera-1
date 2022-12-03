@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% load i18n static %}
+{% load admin_urls %}
+{% block extrahead %}
+    <link type="text/css" rel="stylesheet"
+         href="{% static 'homepage/estilo.css' %}" /> 
+{% endblock %}
+{% block content %}
+    <header>
+        <nav>
+            <a href='/'>{% trans 'Home' %}</a>
+        </nav>
+        <section class="textos-header">
+            <div class = "barra">
+                <h1 class="h">{% trans "Voting in Decide" %}</h1>
+            </div>
+        </section>
+    </header>
+    <main>
+        <section class="portafolio">
+            <div class="contenedor">
+                <h2 class="titulo">{% trans 'Redirección de modulos' %}</h2>
+                <table class="tabla">
+                    <td>
+                        <div class="filas" > 
+                            <p >Administrador</p>
+                            <a class="enlace" href="/admin"></a>   
+                        </div> 
+                        <div class="filas">
+                            <p>Doc</p>
+                            <a class="enlace" href="/doc" ></a>
+                        </div>
+                        <div class="filas">
+                            <p>gateway</p>
+                            <a class="enlace" href="/gateway" ></a>   
+                        </div>
+                        <div class="filas">
+                            <p>authentication</p>
+                            <a class="enlace" href="admin/auth" ></a>    
+                        </div>
+                        <div class="filas">
+                            <p>Base</p>
+                            <a class="enlace" href="admin/base" ></a>
+                        </div>
+                        <div class="filas">
+                            <p>Booth</p>
+                            <a class="enlace" href="/booth/{voting_id}" ></a>
+                        </div>        
+                    </td>
+                    <td>
+                        <div class="filas">
+                            <p>Census</p>
+                            <a class="enlace" href="admin/census"></a>
+                        </div>
+                        <div class="filas">
+                            <p>Mixnet</p>
+                            <a class="enlace" href="admin/mixnet"></a>
+                        </div>
+                        <div class="filas">
+                            <p>Postproc</p>
+                            <a class="enlace" href="/postproc" ></a>
+                        </div>
+                        <div class="filas">
+                            <p>Store</p>
+                            <a class="enlace" href="admin/store" ></a>
+                        </div>
+                        <div class="filas">
+                            <p>Visualizer</p>
+                            <a class="enlace" href="/visualizer" ></a>
+                        </div>
+                        <div class="filas">
+                            <p>Voting</p>
+                            <a class="enlace" href="admin/voting" ></a>
+                        </div>
+                    </td>
+                </table>          
+            </div>
+        </section>
+        {% if votings|length > 0 %}
+        <section>
+            <h2 class="titulo">{% trans 'Votings' %}</h2>
+            <div class="listavotings">
+                {%for voting in votings%}
+                <li><a href="/visualizer/{{voting.id}}">{{voting.name}}</a></li>
+                {% endfor %}
+            </div>
+        </section>
+        {% endif %}   
+    </main>
+    {% endblock %}
