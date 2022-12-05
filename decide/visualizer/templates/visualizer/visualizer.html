@@ -17,6 +17,7 @@
         </b-navbar>
 
         <div class="voting container">
+            <input id="vot_type" type="hidden" value="V">
             <h1>[[ voting.id ]] - [[ voting.name ]]</h1>
 
             <h2 v-if="!voting.start_date">Votación no comenzada</h2>
@@ -40,20 +41,111 @@
                         </tr>
                     </tbody>
                 </table>
+                <a v-bind:href="'/visualizer/votes/' + [[ voting.id ]] ">Descargar datos en CSV</a>
+                <pie-chart></pie-chart> 
+                <bar-chart></bar-chart>
             </div>
-
         </div>
     </div>
 {% endblock %}
 
 {% block extrabody %}
+
+    <!-- JQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
     <!-- Vuejs -->
     <script src="https://unpkg.com/vue@2.7.10"></script>
     <script src="https://unpkg.com/babel-polyfill@latest/dist/polyfill.min.js"></script>
     <script src="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.js"></script>
 
+    <!-- Chart.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
+
+    <!-- Vue Chart -->
+    <script src="https://unpkg.com/vue-chartjs@3.5.0/dist/vue-chartjs.min.js"></script>
+
+    <!-- Pie Chart -->
+    <script>
+        Vue.component('pieChart',{
+            extends:VueChartJs.Pie,
+            data(){
+                return{
+                    votesOptions:[],
+                    votesValue:[],
+                    bgColor:[]
+                }
+            },
+            mounted(){
+                this.loadData()
+                this.renderChart({
+                    labels: this.votesOptions,
+                    datasets: [
+                        {
+                            label: 'GRAFICOS',
+                            backgroundColor: this.bgColor,
+                            data: this.votesValue
+                        }
+                    ]
+                },{responsive:true,  maintainAspectRatio: false})
+            },
+            methods:{
+                loadData(){
+                    (voting.postproc).forEach(element =>{
+                        randomColor = Math.floor(Math.random()*16777215).toString(16);
+                        this.bgColor.push("#" + randomColor)
+                        this.votesOptions.push(element.option)
+                        this.votesValue.push(element.votes)
+                    });
+                    
+                }
+            }
+
+        })
+    </script>
+        
+    <!-- Bar Chart -->
+    <script>
+        Vue.component('barChart',{
+            extends:VueChartJs.Bar,
+            data(){
+                return{
+                    votesOptions:[],
+                    votesValue:[],
+                    bgColor:[]
+                }
+            },
+            mounted(){
+                this.loadData()
+                this.renderChart({
+                    labels: this.votesOptions,
+                    datasets: [
+                        {
+                            label: 'GRAFICOS',
+                            backgroundColor: this.bgColor,
+                            data: this.votesValue
+                        }
+                    ]
+                },{responsive:true,  maintainAspectRatio: false})
+            },
+            methods:{
+                loadData(){
+                    (voting.postproc).forEach(element =>{
+                        randomColor = Math.floor(Math.random()*16777215).toString(16);
+                        this.bgColor.push("#" + randomColor)
+                        this.votesOptions.push(element.option)
+                        this.votesValue.push(element.votes)
+                    });
+                    
+                }
+            }
+
+        })
+    </script>
+
     <script>
         var voting = {{voting|safe}};
+        console.log(voting);
         var app = new Vue({
             delimiters: ['[[', ']]'],
             el: '#app-visualizer',
@@ -62,5 +154,6 @@
             }
         })
     </script>
+
 </body>
 {% endblock %}
