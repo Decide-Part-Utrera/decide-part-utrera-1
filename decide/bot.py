@@ -47,7 +47,6 @@ def resolver(message):
 
 
 '''
-          
 @bot.message_handler(commands=["censos"]) #devuelve listado de todos los census
 def resolver(message): 
     try: 
@@ -57,7 +56,7 @@ def resolver(message):
         reply = 'Censos: \n' 
         n = 0
         for clave in response.json(): 
-            reply += 'Nombre: ' + response.json()[clave]['name'] + '. Numero votantes: ' + response.json()[clave]['num_voters'] + '\n'
+            reply += 'voting: ' + response.json()[clave]['voting'] + '. voter: ' + response.json()[clave]['voter'] + '\n'
             n += 1
         if(n==0):
             bot.reply_to(message, "No hay censos actualmente.")
@@ -67,11 +66,13 @@ def resolver(message):
         bot.reply_to(message, 'Error llamando a la API') 
 
       
-        
+
+'''
+
 @bot.message_handler(commands=["usuarios"]) #devuelve listado de todos los usuarios
 def resolver(message): 
     try: 
-        url = 'http://localhost:8050/visualizer/allUsers' 
+        url = 'http://127.0.0.1:8000/visualizer/allUsers' 
         response = requests.get(url) 
         print(response.json())
         reply = 'Usuarios: \n' 
@@ -86,7 +87,7 @@ def resolver(message):
     except Exception: 
         bot.reply_to(message, 'Error llamando a la API') 
 
-'''
+
 
 def parse_fecha(fecha):
     partes = fecha.split('-')
@@ -136,7 +137,7 @@ def detalle(message):
    except Exception: 
         bot.reply_to(message, 'Error llamando a la API') 
 
-'''        
+     
 @bot.message_handler(func=lambda msg: msg.text is not None and '/login' in msg.text) 
  
 #/login <nombre_usuario> <contraseña> 
@@ -149,19 +150,17 @@ def login(message):
          user = texts[1].strip() #strip para quitarle los espacios iniciales y finales 
          password = texts[2].strip() 
 
-         url = 'http://127.0.0.1:8000/authentication/login/' 
+         url = 'http://127.0.0.1:8000/authentication/login-bot/' 
 
          payload={"username":user,"password":password} 
-       
-         respuesta = requests.request(url, payload) 
+         files=[] 
+         headers = {} 
+         respuesta = requests.request("POST", url, headers=headers, data=payload, files=files) 
          listaclaves = list(respuesta.json().keys()) 
-         print(listaclaves)
-                           
          if 'non_field_errors' in listaclaves: 
             bot.reply_to(message, 'No puede iniciar sesión con las credenciales proporcionadas. Por favor vuelva a intentarlo.') 
          elif 'token' in listaclaves: 
             diccionario = {respuesta.json()['user_id']: True} 
-           
             if((not respuesta.json()['user_id'] in tokenSesion.keys())or(tokenSesion[respuesta.json()['user_id']] == False)): 
                tokenSesion.update(diccionario) 
                bot.reply_to(message,'Ha iniciado sesión correctamente. Su ID para votar es:'+str(respuesta.json()['user_id'])+'. Este ID deberas de usarlo para votar !Por favor, no la comparta con nadie¡\n\nEs importante que cierre la sesion al terminar de votar') 
@@ -177,7 +176,7 @@ def login(message):
       print("Error en /login, al introducir el comando: "+str(message.text)) 
  
       
-    
+     
 @bot.message_handler(func=lambda msg: msg.text is not None and '/logout' in msg.text) 
  
 #/logout <id_usuario> 
@@ -205,9 +204,12 @@ def logout(message):
    except Exception: 
       bot.reply_to(message, 'Error llamando a la API') 
  
+
+
+
 def getVotacion(id_votacion): 
 
-   url = 'http://localhost:8050/voting/?id=' 
+   url = 'http://127.0.0.1:8000/voting/?id=' 
 
    url+=str(id_votacion) 
    payload={} 
@@ -274,16 +276,16 @@ def votacion(message):
                         question_opt_body = str(question_opt).replace('\'', '\"') 
                          
 
-                        url = "http://localhost:8050/voting/encrypt/" 
+                        url = "http://127.0.0.1:8000/voting/encrypt/" 
 
                         payload={"question_opt": str(question_opt),"id_v": str(id_votacion)} 
                         files=[] 
                         headers = {} 
                         respuesta = requests.request("POST", url, headers=headers, data=payload, files=files) 
                         listaclaves = list(respuesta.json().values()) 
+                        print(listaclaves)
 
-
-                        url2 = 'http://localhost:8050/store/store-bot/' 
+                        url2 = 'http://127.0.0.1:8000/store/store-bot/' 
 
                         payload2={"voting_id":id_votacion,"voter_id":id_usuario, "a":str(listaclaves[0]), "b":str(listaclaves[1])} 
                         files2=[] 
@@ -317,7 +319,7 @@ def no_command_message(message):
    bot.send_message(message.chat.id, 'Por favor introduzca algun comando del listado siguiente:') 
    send_welcome(message) 
  
-''' 
+ 
 
 # SERVER SIDE  
 @server.route('/' + TOKEN, methods=['POST']) 
