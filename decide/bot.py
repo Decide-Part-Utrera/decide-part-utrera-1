@@ -15,7 +15,7 @@ meses = {'01':'Enero', '02':'Febrero', '03':'Marzo', '04':'Abril','05':'Mayo','0
  
 @bot.message_handler(commands=['start']) 
 def comienzo(message): 
-    bot.send_message(message.chat.id, "Bienvenido al sistema de votación Decide-Utrera Bot de Telegram Exclusive Edition") 
+    bot.send_message(message.chat.id, "Acaba de iniciar el bot de Telegram Decide-Utrera para poder realizar votaciones y consultas varias") 
  
 @bot.message_handler(commands=['help']) 
 def send_welcome(message): 
@@ -78,7 +78,7 @@ def resolver(message):
         reply = 'Usuarios: \n' 
         n = 0
         for clave in response.json(): 
-            reply += 'Nombre de usuario: ' + response.json()[clave]['username'] + '. Email: ' + response.json()[clave]['email'] + '\n'
+            reply += response.json()[clave]['username'] + '. Email: ' + response.json()[clave]['email'] + '\n'
             n += 1
         if(n==0):
             bot.reply_to(message, "No hay usuarios actualmente.")
