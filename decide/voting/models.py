@@ -13,17 +13,20 @@ from base.models import Auth, Key
 class Question(models.Model):
     desc = models.TextField()
     types = [
-            ('N', 'Normal question'),
-            ('B', 'Binary question'),
+            ('Q', 'Question'),
+            ('BQ', 'Binary Question'),
+            ('SQ', 'Score Question')
             ]
-    tipo = models.CharField(max_length=1, choices=types, default='N')  
-    create_ordination = models.BooleanField(verbose_name='Create ordination', default=False)
+    type = models.CharField(max_length=2, choices=types, default='Q')  
     
     def save(self):
         super().save()
-        if self.tipo:
+        if self.type == 'BQ':
             import voting.views # Importo aquí porque si lo hago arriba da error por importacion circular
-            voting.views.create_binary_question(self)
+            voting.views.create_BinaryQuestion(self)
+        elif self.type == 'SQ':
+            import voting.views
+            voting.views.create_ScoreQuestion(self)
 
     def clean(self):
         if(validators.lofensivo(self.desc)):
@@ -39,9 +42,12 @@ class QuestionOption(models.Model):
     option = models.TextField()
 
     def save(self, *args, **kwargs):
-        if self.question.tipo == 'B':
+        if self.question.type == 'BQ':
             if not self.option == 'Sí' and not self.option == 'No':
                 return ""
+        elif self.question.type == 'SQ':
+            if not self.option == '0' and not self.option == '1' and not self.option == '2' and not self.option == '3' and not self.option == '4' and not self.option == '5':
+                return ""    
         else:
             if not self.number:
                 self.number = self.question.options.count() + 2
@@ -57,10 +63,12 @@ class Voting(models.Model):
     question = models.ForeignKey(Question, related_name='voting', on_delete=models.CASCADE)
     
     types = (
-    ('N', 'NORMAL VOTING'),
-    ('B', 'BINARY VOTING'))
+    ('V', 'Voting'),
+    ('BV', 'Binary Voting'),
+    ('SV', 'Score Voting')
+    )
 
-    voting_type = models.CharField(max_length=2, choices=types, default='N')
+    voting_type = models.CharField(max_length=2, choices=types, default='V')
 
     start_date = models.DateTimeField(blank=True, null=True)
     end_date = models.DateTimeField(blank=True, null=True)
