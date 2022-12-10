@@ -5,12 +5,28 @@ from django.contrib.postgres.fields import JSONField
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
+
 from base import mods
 from base.models import Auth, Key
 
 
 class Question(models.Model):
     desc = models.TextField()
+    types = [
+            ('Q', 'Question'),
+            ('BQ', 'Binary Question'),
+            ('SQ', 'Score Question')
+            ]
+    type = models.CharField(max_length=2, choices=types, default='Q')  
+    
+    def save(self):
+        super().save()
+        if self.type == 'BQ':
+            import voting.views # Importo aquí porque si lo hago arriba da error por importacion circular
+            voting.views.create_BinaryQuestion(self)
+        elif self.type == 'SQ':
+            import voting.views
+            voting.views.create_ScoreQuestion(self)
 
     def clean(self):
         if(validators.lofensivo(self.desc)):
@@ -25,9 +41,16 @@ class QuestionOption(models.Model):
     number = models.PositiveIntegerField(blank=True, null=True)
     option = models.TextField()
 
-    def save(self):
-        if not self.number:
-            self.number = self.question.options.count() + 2
+    def save(self, *args, **kwargs):
+        if self.question.type == 'BQ':
+            if not self.option == 'Sí' and not self.option == 'No':
+                return ""
+        elif self.question.type == 'SQ':
+            if not self.option == '0' and not self.option == '1' and not self.option == '2' and not self.option == '3' and not self.option == '4' and not self.option == '5':
+                return ""    
+        else:
+            if not self.number:
+                self.number = self.question.options.count() + 2
         return super().save()
 
     def __str__(self):
@@ -38,6 +61,14 @@ class Voting(models.Model):
     name = models.CharField(max_length=200)
     desc = models.TextField(blank=True, null=True, validators=[validators.lofensivo])
     question = models.ForeignKey(Question, related_name='voting', on_delete=models.CASCADE)
+    
+    types = (
+    ('V', 'Voting'),
+    ('BV', 'Binary Voting'),
+    ('SV', 'Score Voting')
+    )
+
+    voting_type = models.CharField(max_length=2, choices=types, default='V')
 
     start_date = models.DateTimeField(blank=True, null=True)
     end_date = models.DateTimeField(blank=True, null=True)

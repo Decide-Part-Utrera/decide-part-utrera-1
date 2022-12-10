@@ -228,3 +228,82 @@ class VotingTestCase(BaseTestCase):
         question = Question(desc='Esta descripcion contiene solo una palabra ofensiva, tonto, pero se necesita que el 20 por ciento sean palabras ofensivas')
         question.clean()
         self.assertEqual(question.desc, 'Esta descripcion contiene solo una palabra ofensiva, tonto, pero se necesita que el 20 por ciento sean palabras ofensivas')
+
+
+    #Test de binary question con opciones por defecto
+    def test_BinaryQuestion(self):
+        q = Question(desc='Test BinaryQuestion', type='BQ')
+        q.save()
+
+        self.assertEquals(len(q.options.all()), 2)
+        self.assertEquals(q.type, 'BQ')
+        self.assertEquals(q.options.all()[0].option, 'Sí')
+        self.assertEquals(q.options.all()[1].option, 'No')
+        self.assertEquals(q.options.all()[0].number, 1)
+        self.assertEquals(q.options.all()[1].number, 2)
+
+    #Test de binary question con opciones
+    def test_BinaryQuestion_Options(self):
+        q = Question(desc='Test BinaryQuestion with options', type='BQ')
+        q.save()
+        qo1 = QuestionOption(question = q, option = 'Prueba1')
+        qo1.save()
+        qo2 = QuestionOption(question = q, option = 'Prueba2')
+        qo2.save()
+        qo3 = QuestionOption(question = q, option = 'Prueba3')
+        qo3.save()
+
+        self.assertEquals(len(q.options.all()), 2)
+        self.assertEquals(q.type, 'BQ')
+        self.assertEquals(q.options.all()[0].option, 'Sí')
+        self.assertEquals(q.options.all()[1].option, 'No')
+        self.assertEquals(q.options.all()[0].number, 1)
+        self.assertEquals(q.options.all()[1].number, 2)
+        
+        
+  #Test de Score question con opciones por defecto
+    def test_ScoreQuestion(self):
+        q = Question(desc='Test ScoreQuestion', type='SQ')
+        q.save()
+
+        self.assertEquals(len(q.options.all()), 6)
+        self.assertEquals(q.type, 'SQ')
+        self.assertEquals(q.options.all()[0].option, '0')
+        self.assertEquals(q.options.all()[1].option, '1')
+        self.assertEquals(q.options.all()[2].option, '2')
+        self.assertEquals(q.options.all()[3].option, '3')
+        self.assertEquals(q.options.all()[4].option, '4')
+        self.assertEquals(q.options.all()[5].option, '5')
+        self.assertEquals(q.options.all()[0].number, 1)
+        self.assertEquals(q.options.all()[1].number, 2)
+        self.assertEquals(q.options.all()[2].number, 3)
+        self.assertEquals(q.options.all()[3].number, 4)
+        self.assertEquals(q.options.all()[4].number, 5)
+        self.assertEquals(q.options.all()[5].number, 6)
+        
+
+    #Test de Score question con opciones
+    def test_ScoreQuestion_Options(self):
+        q = Question(desc='Test ScoreQuestion with options', type='SQ')
+        q.save()
+        qo1 = QuestionOption(question = q, option = 'Prueba1')
+        qo1.save()
+        qo2 = QuestionOption(question = q, option = 'Prueba2')
+        qo2.save()
+        qo3 = QuestionOption(question = q, option = 'Prueba3')
+        qo3.save()
+
+        self.assertEquals(len(q.options.all()), 6)
+        self.assertEquals(q.type, 'SQ')
+        self.assertEquals(q.options.all()[0].option, '0')
+        self.assertEquals(q.options.all()[1].option, '1')
+        self.assertEquals(q.options.all()[2].option, '2')
+        self.assertEquals(q.options.all()[3].option, '3')
+        self.assertEquals(q.options.all()[4].option, '4')
+        self.assertEquals(q.options.all()[5].option, '5')
+        self.assertEquals(q.options.all()[0].number, 1)
+        self.assertEquals(q.options.all()[1].number, 2)
+        self.assertEquals(q.options.all()[2].number, 3)
+        self.assertEquals(q.options.all()[3].number, 4)
+        self.assertEquals(q.options.all()[4].number, 5)
+        self.assertEquals(q.options.all()[5].number, 6)
