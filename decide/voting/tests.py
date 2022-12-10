@@ -228,3 +228,34 @@ class VotingTestCase(BaseTestCase):
         question = Question(desc='Esta descripcion contiene solo una palabra ofensiva, tonto, pero se necesita que el 20 por ciento sean palabras ofensivas')
         question.clean()
         self.assertEqual(question.desc, 'Esta descripcion contiene solo una palabra ofensiva, tonto, pero se necesita que el 20 por ciento sean palabras ofensivas')
+
+
+        # Testing yes/no question feature
+    def test_create_yes_no_question(self):
+        q = Question(desc='Yes/No question test', tipo='B')
+        q.save()
+
+        self.assertEquals(len(q.options.all()), 2)
+        self.assertEquals(q.tipo, 'B')
+        self.assertEquals(q.options.all()[0].option, 'Sí')
+        self.assertEquals(q.options.all()[1].option, 'No')
+        self.assertEquals(q.options.all()[0].number, 1)
+        self.assertEquals(q.options.all()[1].number, 2)
+
+    # Adding options other than yes and no manually
+    def test_create_yes_no_question_with_other_options(self):
+        q = Question(desc='Yes/No question test', tipo='B')
+        q.save()
+        qo1 = QuestionOption(question = q, option = 'First option')
+        qo1.save()
+        qo2 = QuestionOption(question = q, option = 'Second option')
+        qo2.save()
+        qo3 = QuestionOption(question = q, option = 'Third option')
+        qo3.save()
+
+        self.assertEquals(len(q.options.all()), 2)
+        self.assertEquals(q.tipo, 'B')
+        self.assertEquals(q.options.all()[0].option, 'Sí')
+        self.assertEquals(q.options.all()[1].option, 'No')
+        self.assertEquals(q.options.all()[0].number, 1)
+        self.assertEquals(q.options.all()[1].number, 2)

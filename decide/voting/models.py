@@ -5,12 +5,25 @@ from django.contrib.postgres.fields import JSONField
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
+
 from base import mods
 from base.models import Auth, Key
 
 
 class Question(models.Model):
     desc = models.TextField()
+    types = [
+            ('N', 'Normal question'),
+            ('B', 'Binary question'),
+            ]
+    tipo = models.CharField(max_length=1, choices=types, default='N')  
+    create_ordination = models.BooleanField(verbose_name='Create ordination', default=False)
+    
+    def save(self):
+        super().save()
+        if self.tipo:
+            import voting.views # Importo aquí porque si lo hago arriba da error por importacion circular
+            voting.views.create_binary_question(self)
 
     def clean(self):
         if(validators.lofensivo(self.desc)):
@@ -25,9 +38,13 @@ class QuestionOption(models.Model):
     number = models.PositiveIntegerField(blank=True, null=True)
     option = models.TextField()
 
-    def save(self):
-        if not self.number:
-            self.number = self.question.options.count() + 2
+    def save(self, *args, **kwargs):
+        if self.question.tipo == 'B':
+            if not self.option == 'Sí' and not self.option == 'No':
+                return ""
+        else:
+            if not self.number:
+                self.number = self.question.options.count() + 2
         return super().save()
 
     def __str__(self):
@@ -38,6 +55,12 @@ class Voting(models.Model):
     name = models.CharField(max_length=200)
     desc = models.TextField(blank=True, null=True, validators=[validators.lofensivo])
     question = models.ForeignKey(Question, related_name='voting', on_delete=models.CASCADE)
+    
+    types = (
+    ('N', 'NORMAL VOTING'),
+    ('B', 'BINARY VOTING'))
+
+    voting_type = models.CharField(max_length=2, choices=types, default='N')
 
     start_date = models.DateTimeField(blank=True, null=True)
     end_date = models.DateTimeField(blank=True, null=True)
