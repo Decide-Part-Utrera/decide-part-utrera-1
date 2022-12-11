@@ -42,10 +42,10 @@
                             <p>Base</p>
                             <a class="enlace" href="admin/base" ></a>
                         </div>
-                        <div class="filas">
+                        <!--<div class="filas">
                             <p>Booth</p>
                             <a class="enlace" href="/booth/{voting_id}" ></a>
-                        </div>        
+                        </div> -->       
                     </td>
                     <td>
                         <div class="filas">
@@ -64,10 +64,13 @@
                             <p>Store</p>
                             <a class="enlace" href="admin/store" ></a>
                         </div>
-                        <div class="filas">
+                    
+                        <!--<div class="filas">
                             <p>Visualizer</p>
-                            <a class="enlace" href="/visualizer" ></a>
-                        </div>
+                            <a class="enlace"  href="/visualizer"></a> 
+                                                    
+                        </div> -->
+                        
                         <div class="filas">
                             <p>Voting</p>
                             <a class="enlace" href="admin/voting" ></a>
@@ -76,15 +79,26 @@
                 </table>          
             </div>
         </section>
-        {% if votings|length > 0 %}
+       {% if votings|length > 0 %}
         <section>
-            <h2 class="titulo">{% trans 'Votings' %}</h2>
+            <h2 class="titulo2">{% trans 'Votings' %}</h2>
             <div class="listavotings">
-                {%for voting in votings%}
-                <li><a href="/visualizer/{{voting.id}}">{{voting.name}}</a></li>
-                {% endfor %}
+                <table class="tabla">
+                    <td>
+                        <h2 class="titulo2">{% trans 'Visualizer' %}</h2>
+                        {%for voting in votings%}
+                        <li><a href="/visualizer/{{voting.id}}">{{voting.name}}</a></li>
+                        {% endfor %}
+                    </td>
+                    <td>
+                        <h2 class="titulo2">{% trans 'Booth' %}</h2>
+                        {%for voting in votings%}
+                        <li><a href="/booth/{{voting.id}}">{{voting.name}}</a></li>
+                        {% endfor %}
+                    </td>
+                </table>
             </div>
-        </section>
+        </section> 
         {% endif %}   
     </main>
     {% endblock %}
