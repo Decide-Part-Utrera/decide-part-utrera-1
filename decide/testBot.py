@@ -47,5 +47,22 @@ class TestMethods(unittest.TestCase):
         r = requests.request("POST", url, headers=headers, data=payload2, files=files) 
         self.assertEqual(r.status_code, 200)
 
+
+    def test_get_votaciones(self):
+        headers = {"Content-type": "application/json",
+        "Accept": "text/plain"}      
+        
+        r = requests.get(API_DECIDE + "voting") 
+
+        self.assertEqual(r.status_code,200)
+
+    def test_get_usuarios(self):
+        headers = {"Content-type": "application/json",
+        "Accept": "text/plain"}      
+        
+        r = requests.get(API_DECIDE + "visualizer/allUsers") 
+
+        self.assertEqual(r.status_code,200)
+
 if __name__ == '__main__':
     unittest.main()
