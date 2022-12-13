@@ -1,5 +1,6 @@
 from django.urls import path
-from .views import VisualizerView, Votes_csv
+from .views import *
+
 
 
 urlpatterns = [
