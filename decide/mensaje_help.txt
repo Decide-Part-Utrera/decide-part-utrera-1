@@ -10,6 +10,4 @@
 
 -> /options <id_votacion> - Muestra opciones de votacion
 
--> /censos - Muestra un listado con todos los censos
-
 -> /usuarios - Muestra un listado con todos los usuarios
