@@ -53,11 +53,6 @@ jobs:
         cd decide
         coverage run --branch --source=. ./manage.py test visualizer --keepdb 
         coverage xml  
-    - name: Run tests homepage
-      run: |
-        cd decide
-        coverage run --branch --source=. ./manage.py test homepage --keepdb 
-        coverage xml    
     - name: Codacy Coverage Reporter
       uses: codacy/codacy-coverage-reporter-action@v1
       with:
