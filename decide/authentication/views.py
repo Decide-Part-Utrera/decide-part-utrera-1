@@ -14,6 +14,10 @@ from django.core.exceptions import ObjectDoesNotExist
 from .serializers import UserSerializer
 
 
+from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework.response import Response
+
+
 class GetUserView(APIView):
     def post(self, request):
         key = request.data.get('token', '')
@@ -53,3 +57,22 @@ class RegisterView(APIView):
         except IntegrityError:
             return Response({}, status=HTTP_400_BAD_REQUEST)
         return Response({'user_pk': user.pk, 'token': token.key}, HTTP_201_CREATED)
+
+
+
+class CustomAuthToken(ObtainAuthToken):
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data,
+                                           context={'request': request})
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data['user']
+        token, created = Token.objects.get_or_create(user=user)
+        return Response({
+            'token': token.key,
+            'user_id': user.pk
+        })
+
+
+
+

@@ -13,7 +13,7 @@
     <div id="app-booth">
         <!-- Navbar -->
         <b-navbar type="dark" variant="secondary">
-            <b-navbar-brand tag="h1">Decide</b-navbar-brand>
+            <b-navbar-brand tag="h2">Decide</b-navbar-brand>
                 <b-navbar-nav class="ml-auto" v-if="!signup">
                     <b-nav-item href="#" v-on:click="decideLogout">
                         {% trans "logout" %}
@@ -25,43 +25,53 @@
             [[ alertMsg ]]
         </b-alert>
 
-        <div class="voting">
-            <h1>[[ voting.id ]] - [[ voting.name ]]</h1>
+        <div class="voting" >
+            <div class="cuadrado">
+                <h1>[[ voting.id ]] - [[ voting.name ]]</h1>
+            </div>
+            <br>
 
             <!-- Register -->
             <b-form @submit="onSubmitLogin" v-if="signup">
                 <b-form-group label="{% trans "Username" %}" label-for="username">
                     <b-form-input
+                        style="width: 300px;"
                         id="username"
                         type="text"
                         v-model="form.username"
                         autocomplete="username"
                         required />
                 </b-form-group>
-                <b-form-group label="{% trans "Password" %}" label-for="password">
+                <b-form-group style="padding-top:5px;" label="{% trans "Password" %}" label-for="password">
                     <b-form-input
+                        style="width: 300px;"
                         id="password"
                         type="password"
                         autocomplete="current-password"
                         v-model="form.password"
                         required />
                 </b-form-group>
-                <b-button type="submit" variant="primary">{% trans "Login" %}</b-button>
+                <br>
+                <br>
+                <b-button type="submit" class="button-29" variant="primary">{% trans "Login" %}</b-button>
             </b-form>
 
             <!-- Voting -->
-            <div v-if="!signup">
+            <div v-if="!signup" style="text-align: center">
                 <h2>[[ voting.question.desc ]]</h2>
-                <b-form-group v-for="opt in voting.question.options" :key="opt.number">
+                <br>
+                <b-form-group style="font-weight:bold;" v-for="opt in voting.question.options" :key="opt.number">
                     <b-form-radio v-model="selected"
                                   :id="'q' + opt.number"
                                   name="question"
                                   :value="opt.number">
-                        [[ opt.option ]]
+                        [[ "&nbsp" + opt.option ]]
                     </b-form-radio>
                 </b-form-group>
-                <b-button type="button" variant="primary" v-on:click="decideSend">
-                    {% trans "Vote" %}
+                <br>
+                <br>
+                <b-button type="button" class="button-29" variant="primary" v-on:click="decideSend">
+                    {% trans "Vote!" %}
                 </b-button>
             </div>
         </div>

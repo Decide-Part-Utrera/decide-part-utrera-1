@@ -3,7 +3,7 @@
   become: yes
   become_user: decide
   git:
-    repo: 'https://github.com/wadobo/decide.git'
+    repo: 'https://github.com/Decide-Part-Utrera/decide-part-utrera-1.git'
     dest: /home/decide/decide
     version: master
 
@@ -20,5 +20,6 @@
   become_user: decide
   pip:
     requirements: /home/decide/decide/requirements.txt
+    requirements_bot: /home/decide/decide/requirements_bot.txt
     virtualenv: /home/decide/venv
     virtualenv_python: python3
