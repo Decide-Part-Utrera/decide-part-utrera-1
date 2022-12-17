@@ -1,9 +1,6 @@
 name: Python application
 
-on:
-  push:
-    paths-ignore:
-      -'decide/testBot.py'
+on: [push]
 
 jobs:
   build:
@@ -46,11 +43,21 @@ jobs:
         cd decide
         python manage.py makemigrations
         python manage.py migrate
-    - name: Run tests 
+    - name: Run tests voting
       run: |
         cd decide
-        coverage run --branch --source=. ./manage.py test  --keepdb 
-        coverage xml      
+        coverage run --branch --source=. ./manage.py test voting --keepdb 
+        coverage xml    
+    - name: Run tests visualizer
+      run: |
+        cd decide
+        coverage run --branch --source=. ./manage.py test visualizer --keepdb 
+        coverage xml  
+    - name: Run tests homepage
+      run: |
+        cd decide
+        coverage run --branch --source=. ./manage.py test homepage --keepdb 
+        coverage xml    
     - name: Codacy Coverage Reporter
       uses: codacy/codacy-coverage-reporter-action@v1
       with:
