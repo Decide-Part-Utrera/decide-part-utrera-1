@@ -20,6 +20,5 @@
   become_user: decide
   pip:
     requirements: /home/decide/decide/requirements.txt
-    requirements_bot: /home/decide/decide/requirements_bot.txt
     virtualenv: /home/decide/venv
     virtualenv_python: python3
