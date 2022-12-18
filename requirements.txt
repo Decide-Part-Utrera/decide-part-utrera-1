@@ -7,7 +7,7 @@ psycopg2==2.8.4
 django-rest-swagger==2.2.0
 coverage==4.5.2
 django-nose==1.4.6
-jsonnet==0.12.1
+jsonnet==0.18.0
 beautifulsoup4==4.9.3
 bs4==0.0.1
 certifi==2020.12.5
