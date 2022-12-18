@@ -1,0 +1,9 @@
+name: decide
+image: ubuntu/bionic64
+command: vagrant up
+replicas: 1
+memory: 1024
+cpu: 2
+build:
+  context: .
+  dockerfile: Vagrantfile
