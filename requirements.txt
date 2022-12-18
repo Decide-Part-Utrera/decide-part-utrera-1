@@ -12,3 +12,4 @@ jsonnet==0.18.0
 selenium==3.141.0
 flask>=2.0.0
 Werkzeug>=2.0.0
+flask-cors==3.0.10
