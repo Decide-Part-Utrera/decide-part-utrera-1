@@ -5,7 +5,7 @@
   git:
     repo: 'https://github.com/Decide-Part-Utrera/decide-part-utrera-1.git'
     dest: /home/decide/decide
-    version: master
+    version: develop
 
 - name: Python virtualenv
   become: yes
